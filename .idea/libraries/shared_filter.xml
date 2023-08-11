@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="shared-filter">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/shared_filter_library_jar/shared-filter.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

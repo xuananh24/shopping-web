@@ -1,0 +1,64 @@
+server:
+  port: 8090
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service-verify
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/user-service/user/send-code/**, /api/user-service/user/verify-code/**
+          filters:
+            - JwtAuthenticationFilter
+        - id: user-service-login
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/user-service/user/login
+        - id: user-service-register
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/user-service/user/register
+        - id: user-service-get-token
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/user-service/get-token
+        - id: product-service-show
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/product-service/product/**
+        - id: product-service-add
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/product-service/admin/product/add
+          filters:
+            - JwtAuthenticationFilter
+        - id: product-service-remove
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/product-service/admin/product/remove/**
+          filters:
+            - JwtAuthenticationFilter
+        - id: product-service-review
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/product-service/review/add
+          filters:
+            - JwtAuthenticationFilter
+        - id: invoice-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/invoice-service/invoice/**
+          filters:
+            - JwtAuthenticationFilter
+        - id: cart-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/cart-service/**
+          filters:
+            - JwtAuthenticationFilter
+        - id: product-service-internal
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/product-service/internal/**
+
