@@ -6,6 +6,7 @@ import com.example.userservice.model.entity.User;
 import com.example.userservice.repository.RefreshTokenRepository;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.service.RefreshTokenService;
+import com.example.userservice.service.TokenWithRedisService;
 import com.example.userservice.utils.JwtUtils;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,13 @@ import java.util.UUID;
 public class RefreshTokenServiceImpl implements RefreshTokenService {
     private Long refreshTokenDuration = TokenConstant.REFRESH_TOKEN_DURATION;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenWithRedisService tokenWithRedisService;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
 
-    public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository, UserRepository userRepository, JwtUtils jwtUtils) {
+    public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository, TokenWithRedisService tokenWithRedisService, UserRepository userRepository, JwtUtils jwtUtils) {
         this.refreshTokenRepository = refreshTokenRepository;
+        this.tokenWithRedisService = tokenWithRedisService;
         this.userRepository = userRepository;
         this.jwtUtils = jwtUtils;
     }
@@ -74,7 +77,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public String getJwtToken(String token) {
         if (verifyToken(token)) {
             User user = refreshTokenRepository.findByToken(token).get().getUser();
-            return jwtUtils.createToken(user.getUsername(), user.getRole(), user.getStatus());
+            String jwt = jwtUtils.createToken(user.getUsername(), user.getRole(), user.getStatus());
+//            tokenWithRedisService.saveToken(token, jwt);
+            return jwt;
         }
         return null;
     }

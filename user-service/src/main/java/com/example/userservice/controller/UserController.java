@@ -6,6 +6,7 @@ import com.example.userservice.model.entity.User;
 import com.example.userservice.model.request.UserInfoRequest;
 import com.example.userservice.model.response.TokenResponse;
 import com.example.userservice.service.RefreshTokenService;
+import com.example.userservice.service.TokenWithRedisService;
 import com.example.userservice.service.UserService;
 import com.example.userservice.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
+    private final TokenWithRedisService tokenWithRedisService;
     private final JwtUtils jwtUtils;
 
-    public UserController(UserService userService, RefreshTokenService refreshTokenService, JwtUtils jwtUtils) {
+    public UserController(UserService userService, RefreshTokenService refreshTokenService, TokenWithRedisService tokenWithRedisService, JwtUtils jwtUtils) {
         this.userService = userService;
         this.refreshTokenService = refreshTokenService;
+        this.tokenWithRedisService = tokenWithRedisService;
         this.jwtUtils = jwtUtils;
     }
 
@@ -51,6 +54,9 @@ public class UserController {
                 .jwtToken(token)
                 .refreshToken(refreshToken.getToken())
                 .build();
+
+//        tokenWithRedisService.saveToken(refreshToken.getToken(), token);
+
         return tokenResponse;
     }
 }

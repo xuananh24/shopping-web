@@ -9,6 +9,7 @@ import com.example.userservice.model.mapper.UserMapper;
 import com.example.userservice.model.request.UserInfoRequest;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.repository.VerifyCodeRepository;
+import com.example.userservice.service.TokenWithRedisService;
 import com.example.userservice.service.UserService;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -31,14 +32,16 @@ public class UserServiceImpl implements UserService {
     private final JavaMailSender javaMailSender;
     private final KafkaTemplate<String, User> kafkaTemplateForRegisterTopic;
     private final KafkaTemplate<String, UserLog> kafkaTemplateForLogTopic;
+    private final TokenWithRedisService tokenWithRedisService;
 
-    public UserServiceImpl(UserRepository userRepository, VerifyCodeRepository verifyCodeRepository, PasswordEncoder passwordEncoder, JavaMailSender javaMailSender, KafkaTemplate<String, User> kafkaTemplateForRegisterTopic, KafkaTemplate<String, UserLog> kafkaTemplateForLogTopic) {
+    public UserServiceImpl(UserRepository userRepository, VerifyCodeRepository verifyCodeRepository, PasswordEncoder passwordEncoder, JavaMailSender javaMailSender, KafkaTemplate<String, User> kafkaTemplateForRegisterTopic, KafkaTemplate<String, UserLog> kafkaTemplateForLogTopic, TokenWithRedisService tokenWithRedisService) {
         this.userRepository = userRepository;
         this.verifyCodeRepository = verifyCodeRepository;
         this.passwordEncoder = passwordEncoder;
         this.javaMailSender = javaMailSender;
         this.kafkaTemplateForRegisterTopic = kafkaTemplateForRegisterTopic;
         this.kafkaTemplateForLogTopic = kafkaTemplateForLogTopic;
+        this.tokenWithRedisService = tokenWithRedisService;
     }
 
     @Override
